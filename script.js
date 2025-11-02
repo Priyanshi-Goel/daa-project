@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-            // --- Constants and Global State ---
-            const ANIMATION_DELAY_MS = 600; // Speed of animations
-            let isAnimating = false; // Flag to prevent concurrent animations
-
-            // --- DOM Elements ---
+            const ANIMATION_DELAY_MS = 600; 
+            let isAnimating = false; 
+           
             const valueInput = document.getElementById('value-input');
             const insertBtn = document.getElementById('insert-btn');
             const deleteMinBtn = document.getElementById('delete-min-btn');
@@ -13,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const heapTreeSvg = document.getElementById('heap-tree-svg');
             const logArea = document.getElementById('log-area');
 
-            // --- MinHeap Class ---
+           
             class MinHeap {
                 constructor() {
                     this.heap = [];
@@ -63,11 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const min = this.heap[0];
                     const lastElement = this.heap.pop();
                     
-                    await animateRemove(0, min); // Animate removing the min
+                    await animateRemove(0, min); 
                     log(`Removing min element (${min}) from root.`, 'info');
                     
                     this.heap[0] = lastElement;
-                    await animateSwap(this.heap.length, 0, lastElement); // Animate moving last to root
+                    await animateSwap(this.heap.length, 0, lastElement);
                     log(`Moved last element (${lastElement}) to root.`, 'info');
                     
                     await this.heapifyDown(0);
@@ -109,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (this.heap[currentIndex] < this.heap[smallerChildIndex]) {
                             log(`${this.heap[currentIndex]} is smaller than its child. HeapifyDown complete.`, 'success');
-                            break; // Element is in its correct place
+                            break; 
                         } else {
                             this.swap(currentIndex, smallerChildIndex);
                             log(`Swapped ${this.heap[currentIndex]} and ${this.heap[smallerChildIndex]} (at indices ${currentIndex} and ${smallerChildIndex}).`, 'step');
@@ -123,21 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const minHeap = new MinHeap();
 
-            // --- Helper Functions ---
-
-            /**
-             * Asynchronous sleep function.
-             * @param {number} ms - Milliseconds to sleep.
-             */
+            
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
 
-            /**
-             * Adds a message to the log area.
-             * @param {string} message - The text to log.
-             * @param {string} type - 'info', 'success', 'error', 'step'.
-             */
+            
             function log(message, type = 'info') {
                 const p = document.createElement('p');
                 p.className = `log-${type}`;
@@ -146,9 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 logArea.scrollTop = logArea.scrollHeight; // Auto-scroll
             }
 
-            /**
-             * Clears all highlights from array and SVG nodes.
-             */
+           
             function clearHighlights() {
                 document.querySelectorAll('.array-element').forEach(el => {
                     el.classList.remove('highlight-current', 'highlight-compare', 'highlight-swap', 'highlight-removed');
@@ -158,9 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            /**
-             * Disables/enables controls during animation.
-             */
+            
             function setControlsDisabled(disabled) {
                 insertBtn.disabled = disabled;
                 deleteMinBtn.disabled = disabled;
@@ -168,13 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 valueInput.disabled = disabled;
             }
 
-            // --- Animation Functions ---
-
-            /**
-             * Animates a comparison between two nodes.
-             * @param {number} index1 - First node index.
-             * @param {number} index2 - Second node index.
-             */
+           
             async function animateCompare(index1, index2) {
                 clearHighlights();
                 getArrayElement(index1)?.classList.add('highlight-current');
@@ -185,11 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearHighlights();
             }
 
-            /**
-             * Animates a swap between two nodes.
-             * @param {number} index1 - First node index.
-             * @param {number} index2 - Second node index.
-             */
+           
             async function animateSwap(index1, index2) {
                 clearHighlights();
                 getArrayElement(index1)?.classList.add('highlight-swap');
@@ -197,16 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 getSvgNode(index1)?.classList.add('svg-highlight-swap');
                 getSvgNode(index2)?.classList.add('svg-highlight-swap');
                 await sleep(ANIMATION_DELAY_MS);
-                renderVisuals(); // Re-render after swap to show new positions
-                await sleep(ANIMATION_DELAY_MS / 2); // Short pause for visual update
+                renderVisuals(); 
+                await sleep(ANIMATION_DELAY_MS / 2); 
                 clearHighlights();
             }
             
-            /**
-             * Animates removing an element (e.g., the min element).
-             * @param {number} index - Index of the element to remove.
-             * @param {number} value - The value being removed (for logging).
-             */
+            
             async function animateRemove(index, value) {
                 clearHighlights();
                 getArrayElement(index)?.classList.add('highlight-removed');
@@ -218,29 +189,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 await sleep(ANIMATION_DELAY_MS / 2);
             }
 
-            // --- Rendering Functions ---
-
-            /**
-             * Gets an array element by its index.
-             * @param {number} index - The index in the array.
-             * @returns {HTMLElement|null} The array element div.
-             */
+            
             function getArrayElement(index) {
                 return arrayDisplay.querySelector(`.array-element[data-index="${index}"]`);
             }
 
-            /**
-             * Gets an SVG node group by its index.
-             * @param {number} index - The index in the heap array.
-             * @returns {SVGGElement|null} The SVG group element for the node.
-             */
+            
             function getSvgNode(index) {
                 return heapTreeSvg.querySelector(`.tree-node-group[data-index="${index}"]`);
             }
 
-            /**
-             * Renders the array representation of the heap.
-             */
+            
             function renderArray() {
                 arrayDisplay.innerHTML = '';
                 if (minHeap.isEmpty()) {
@@ -263,19 +222,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            /**
-             * Renders the binary tree representation of the heap using SVG.
-             */
+            
             function renderTree() {
-                heapTreeSvg.innerHTML = ''; // Clear previous tree
+                heapTreeSvg.innerHTML = ''; 
                 if (minHeap.isEmpty()) {
                     return;
                 }
 
-                // Calculate tree layout parameters
+               
                 const nodeRadius = 25;
                 const verticalSpacing = 70;
-                const horizontalSpacingFactor = 2.5; // Controls horizontal spread
+                const horizontalSpacingFactor = 2.5; 
 
                 const levels = Math.ceil(Math.log2(minHeap.size + 1));
                 const maxWidth = Math.pow(2, levels - 1) * nodeRadius * horizontalSpacingFactor * 2;
@@ -285,44 +242,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 heapTreeSvg.setAttribute('height', '100%');
 
 
-                // Store node positions to draw edges later
-                const nodePositions = new Map(); // Map: index -> {x, y}
+               
+                const nodePositions = new Map(); 
 
                 minHeap.heap.forEach((item, index) => {
                     const level = Math.floor(Math.log2(index + 1));
                     const nodesInLevel = Math.pow(2, level);
-                    const positionInLevel = index - (nodesInLevel - 1); // 0-indexed position within its level
+                    const positionInLevel = index - (nodesInLevel - 1); 
                     
-                    // Center the tree horizontally
+                    
                     const levelWidth = nodesInLevel * nodeRadius * horizontalSpacingFactor * 2;
-                    const startX = (heapTreeSvg.clientWidth - levelWidth) / 2 || 0; // Fallback for initial render
+                    const startX = (heapTreeSvg.clientWidth - levelWidth) / 2 || 0; 
                     
-                    // Calculate x and y for the current node
-                    // x position depends on its position within the level and overall tree width
+                   
                     const x = (positionInLevel * (nodeRadius * horizontalSpacingFactor * 2)) + nodeRadius + (maxWidth / 2) - (levelWidth / 2);
-                    const y = (level * verticalSpacing) + nodeRadius + 20; // +20 for some top padding
+                    const y = (level * verticalSpacing) + nodeRadius + 20; 
 
                     nodePositions.set(index, { x, y });
 
-                    // Draw edges first (for parent to child)
+                    
                     if (index > 0) {
                         const parentIndex = minHeap.getParentIndex(index);
                         const parentPos = nodePositions.get(parentIndex);
                         if (parentPos) {
                             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                             line.setAttribute('x1', parentPos.x);
-                            line.setAttribute('y1', parentPos.y + nodeRadius); // Start from bottom of parent circle
+                            line.setAttribute('y1', parentPos.y + nodeRadius); 
                             line.setAttribute('x2', x);
-                            line.setAttribute('y2', y - nodeRadius); // End at top of child circle
+                            line.setAttribute('y2', y - nodeRadius);
                             line.classList.add('tree-edge');
                             heapTreeSvg.appendChild(line);
                         }
                     }
 
-                    // Draw node circle and text
+                   
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     group.classList.add('tree-node-group');
-                    group.dataset.index = index; // Store index for easy lookup
+                    group.dataset.index = index; 
 
                     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     circle.setAttribute('cx', x);
@@ -332,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     text.setAttribute('x', x);
-                    text.setAttribute('y', y + 5); // Adjust for vertical centering of text
+                    text.setAttribute('y', y + 5); 
                     text.setAttribute('text-anchor', 'middle');
                     text.classList.add('tree-node-text');
                     text.textContent = item;
@@ -343,15 +299,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
             
-            /**
-             * Renders both array and tree visualizations.
-             */
+            
             function renderVisuals() {
                 renderArray();
                 renderTree();
             }
 
-            // --- Event Handlers ---
+            
 
             async function handleInsert() {
                 if (isAnimating) return;
@@ -364,14 +318,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 isAnimating = true;
                 setControlsDisabled(true);
-                logArea.innerHTML = ''; // Clear logs for new operation
+                logArea.innerHTML = ''; 
                 clearHighlights();
 
                 log(`Attempting to insert ${value}...`, 'info');
                 await minHeap.insert(value);
                 
                 log(`Value ${value} inserted successfully.`, 'success');
-                renderVisuals(); // Final render after animation completes
+                renderVisuals(); 
                 valueInput.value = '';
                 valueInput.focus();
                 isAnimating = false;
@@ -387,30 +341,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 isAnimating = true;
                 setControlsDisabled(true);
-                logArea.innerHTML = ''; // Clear logs for new operation
+                logArea.innerHTML = ''; 
                 clearHighlights();
 
                 log('Attempting to delete minimum element...', 'info');
                 await minHeap.deleteMin();
 
-                renderVisuals(); // Final render after animation completes
+                renderVisuals(); 
                 valueInput.value = '';
                 isAnimating = false;
                 setControlsDisabled(false);
             }
 
             function handleReset() {
-                if (isAnimating) return; // Don't reset mid-animation
-                minHeap.heap = []; // Clear the heap array
+                if (isAnimating) return; 
+                minHeap.heap = []; 
                 logArea.innerHTML = '';
                 log('Heap has been reset.', 'info');
                 renderVisuals();
                 valueInput.value = '';
                 valueInput.focus();
-                setControlsDisabled(false); // Ensure controls are enabled after reset
+                setControlsDisabled(false); 
             }
 
-            // --- Event Listeners ---
+            
             insertBtn.addEventListener('click', handleInsert);
             deleteMinBtn.addEventListener('click', handleDeleteMin);
             resetBtn.addEventListener('click', handleReset);
@@ -421,6 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // --- Initial Setup ---
-            renderVisuals(); // Draw empty heap initially
+            
+            renderVisuals(); 
         });
